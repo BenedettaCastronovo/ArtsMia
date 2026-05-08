@@ -29,11 +29,11 @@ class DAO():
         conn = DBConnect.get_connection()
         cursor = conn.cursor(dictionary = True)
 
-        res = []
+        res = [] #< per evitare duplicati e autocollegamenti
         query = """SELECT eo.object_id as o1, eo2.object_id as o2, count(*) as peso
                     FROM exhibition_objects eo, exhibition_objects eo2 
                     WHERE eo.exhibition_id = eo2.exhibition_id 
-                    and eo.object_id < eo2.object_id 
+                    and eo.object_id < eo2.object_id
                     and eo.object_id = %s and eo2.object_id = %s
                     group by eo.object_id, eo2.object_id"""
 
@@ -42,9 +42,6 @@ class DAO():
         for row in cursor:
             res.append(row["peso"])
             #res.append(ArtObject(object_id=row["object_id"], ...))
-
-
-
         cursor.close()
         conn.close()
 
@@ -70,7 +67,7 @@ class DAO():
 
         for row in cursor:
             #res.append((o1, o2, peso))
-            res.append(Arco(idMapAO[row["o1"]], idMapAO[row["o2"]], row["peso"]))
+            res.append(Arco(idMapAO[row["o1"]], idMapAO[row["o2"]], row["peso"])) #cosi gli passo gli oggetti che recupero dalla mappa con l'id
 
         cursor.close()
         conn.close()
